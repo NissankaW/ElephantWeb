@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.eleTronics.pojos;
 
-package com.eleTronics;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public class MyException extends RuntimeException {
+@Getter
+@AllArgsConstructor
+public class MyRestResponse {
 
-	public MyException(String message) {
-		super(message);
-	}
-
+    private final String message;
 }

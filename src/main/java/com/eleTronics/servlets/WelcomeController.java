@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.eleTronics.servlets;
 
-package com.eleTronics;
-
+import com.eleTronics.entities.Post;
+import com.eleTronics.pojos.MyRestResponse;
+import com.eleTronics.exceptions.MyException;
 import java.util.Date;
 import java.util.Map;
 
@@ -31,30 +33,38 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 public class WelcomeController {
 
-	@Value("${application.message:Hello World}")
-	private String message;
+    private BlogService blogService = new BlogService();
 
-	@GetMapping("/")
-	public String welcome(Map<String, Object> model) {
-		model.put("time", new Date());
-		model.put("message", this.message);
-		return "jsp/welcome";
-	}
+    @Value("${application.message:Hello World}")
+    private String message;
 
-	@RequestMapping("/fail")
-	public String fail() {
-		throw new MyException("Oh dear!");
-	}
+    @GetMapping("/")
+    public String welcome(Map<String, Object> model) {
+        model.put("time", new Date());
+        model.put("message", this.message);
+        
+        for (Post post : blogService.getAllPosts()) {
+            System.out.println(post);
+        }
+//        model.put("posts", blogService.getAllPosts());
+        return "jsp/welcome";
+    }
 
-	@RequestMapping("/fail2")
-	public String fail2() {
-		throw new IllegalStateException();
-	}
+    @RequestMapping("/fail")
+    public String fail() {
+        throw new MyException("Oh dear!");
+    }
 
-	@ExceptionHandler(MyException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public @ResponseBody MyRestResponse handleMyRuntimeException(MyException exception) {
-		return new MyRestResponse("Some data I want to send back to the client.");
-	}
+    @RequestMapping("/fail2")
+    public String fail2() {
+        throw new IllegalStateException();
+    }
+
+    @ExceptionHandler(MyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public @ResponseBody
+    MyRestResponse handleMyRuntimeException(MyException exception) {
+        return new MyRestResponse("Some data I want to send back to the client.");
+    }
 
 }

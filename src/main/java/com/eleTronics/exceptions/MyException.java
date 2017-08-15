@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package com.eleTronics;
+package com.eleTronics.exceptions;
 
-public class MyRestResponse {
+public class MyException extends RuntimeException {
 
-	private String message;
-
-	public MyRestResponse(String message) {
-		this.message = message;
-	}
-
-	public String getMessage() {
-		return this.message;
+	public MyException(String message) {
+		super(message);
 	}
 
 }
