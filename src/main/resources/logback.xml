@@ -1,0 +1,70 @@
+<!--logback is not recursively looking for it's config file,
+    so it needs to be in root directory on classpath -->
+<configuration>
+
+    <!-- setup access to values defined in application.properties -->
+    <property resource="com/eletronics/elephantweb/application.properties"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <Pattern>
+                    %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n
+                </Pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <appender name="FILE-APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/app.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${logging.path}/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each file should be at most 10MB, keep a year's worth of history, but at most 5GB -->
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>365</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+
+    </appender>
+
+    <appender name="FILE-JOOQ" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/jooq.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>
+                ${logging.path}/archived/jooq.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <!-- each file should be at most 10MB, keep a year's worth of history, but at most 5GB -->
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>365</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="org.jooq" level="ERROR">
+        <appender-ref ref="FILE-JOOQ"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="com.eletronics.elephantweb" level="DEBUG"/>
+
+    <!-- Send logs to both console and file audit -->
+    <root level="INFO" additivity="false">
+        <appender-ref ref="FILE-APP"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

@@ -3,203 +3,322 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.eleTronics</groupId>
+
+    <groupId>com.eletronics</groupId>
     <artifactId>ElephantWeb</artifactId>
-    <name>ElephantWeb</name>
     <description>Elephant website and database webserver</description>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>war</packaging>
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- Format the build timestamp with timezone and store for filtering -->
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss z</maven.build.timestamp.format>
+        <spring.version>5.0.7.RELEASE</spring.version>
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+        <org.jooq.version>3.11.1</org.jooq.version>
+        <flyway.version>5.1.4</flyway.version>
     </properties>
 
     <dependencies>
         <!-- Compile -->
         <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.23.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${org.jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>0.9.14</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+            <version>3.0.2.RELEASE</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>mysql</groupId>-->
+        <!--<artifactId>mysql-connector-java</artifactId>-->
+        <!--</dependency>-->
         <!-- Provided -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.18</version>
+            <version>1.18.0</version>
             <scope>provided</scope>
         </dependency>
 
         <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-starter-test</artifactId>-->
+        <!--<scope>test</scope>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
+                        <id>attach-sources</id>
                         <goals>
-                            <goal>add-source</goal>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+            <!--<version>2.10.4</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>attach-javadocs</id>-->
+            <!--<goals>-->
+            <!--<goal>jar</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
+            <plugin>
+                <!-- Package all dependencies into a single executable jar -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <sources>
-                                <source>gensrc/main/java</source>
-                            </sources>
+                            <classifier>uber</classifier>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <!-- Include all resources in the jar -->
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
-    
+
     <profiles>
         <profile>
-            <id>h2</id>
+            <!--Create a sqlite database and run compilation against that with jooq. It can also be used for tests.-->
+            <id>jooq</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.driver>org.sqlite.JDBC</db.driver>
+                <db.url>jdbc:sqlite:./target/elephants.sqlite3</db.url>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.jooq</groupId>
-                        <artifactId>jooq-codegen-maven</artifactId>
+                        <!-- Create the target directory so the database can be put there (not created automatically) -->
+                        <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>generate-sources</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <tasks>
+                                        <mkdir dir="target"/>
+                                    </tasks>
+                                </configuration>
                                 <goals>
-                                    <goal>generate</goal>
+                                    <goal>run</goal>
                                 </goals>
                             </execution>
                         </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.h2database</groupId>
-                                <artifactId>h2</artifactId>
-                                <version>${h2.version}</version>
-                            </dependency>
-                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.7.0</version>
+                        <executions>
+                            <execution>
+                                <!-- Specifically compile all java migrations before performing flyway migrations -->
+                                <id>compile-migrations</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>com/eletronics/elephantweb/database/migrations/*.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>${flyway.version}</version>
+
+                        <!-- Note that we're executing the Flyway plugin in the "generate-sources" phase -->
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>migrate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+
+                        <!-- Note that we need to prefix the database/migration path with filesystem: to prevent Flyway
+                             from looking for our migration scripts only on the classpath -->
                         <configuration>
-                            <jdbc>
-                                <driver>org.h2.Driver</driver>
-                                <url>jdbc:h2:~/springbootjooq</url>
-                            </jdbc>
-                            <generator>
-                                <name>org.jooq.util.DefaultGenerator</name>
-                                <database>
-                                    <name>org.jooq.util.h2.H2Database</name>
-                                    <includes>.*</includes>
-                                    <excludes />
-                                    <inputSchema>elephants</inputSchema>
-                                </database>
-                                <target>
-                                    <packageName>com.eleTronics.jooq.domain</packageName>
-                                    <directory>gensrc/main/java</directory>
-                                </target>
-                            </generator>
+                            <driver>${db.driver}</driver>
+                            <url>${db.url}</url>
+                            <table>migration</table>
+                            <locations>
+                                <location>
+                                    classpath:com/eletronics/elephantweb/database/migrations
+                                </location>
+                                <location>
+                                    filesystem:src/main/resources/com/eletronics/elephantweb/database/migrations
+                                </location>
+                            </locations>
                         </configuration>
                     </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>mysql</id>
-            <build>
-                <plugins>
                     <plugin>
                         <groupId>org.jooq</groupId>
                         <artifactId>jooq-codegen-maven</artifactId>
+                        <version>${org.jooq.version}</version>
+                        <!-- The plugin should hook into the generate goal -->
                         <executions>
                             <execution>
+                                <id>java-generator</id>
+                                <phase>generate-sources</phase>
                                 <goals>
                                     <goal>generate</goal>
                                 </goals>
+                                <configuration>
+                                    <jdbc>
+                                        <driver>${db.driver}</driver>
+                                        <url>${db.url}</url>
+                                    </jdbc>
+                                    <generator>
+                                        <database>
+                                            <properties>
+                                                <property>
+                                                    <key>dialect</key>
+                                                    <value>sqlite</value>
+                                                </property>
+                                            </properties>
+                                            <schemaVersionProvider>SELECT '${db_schema}_' || version
+                                                FROM migration ORDER BY installed_rank DESC LIMIT 1
+                                            </schemaVersionProvider>
+
+                                            <includes>.*</includes>
+                                            <excludes>sqlite_sequence|migration</excludes>
+                                        </database>
+                                        <strategy>
+                                            <matchers>
+                                                <tables>
+                                                    <table>
+                                                        <pojoClass>
+                                                            <transform>PASCAL</transform>
+                                                            <expression>$0_Pojo</expression>
+                                                        </pojoClass>
+                                                        <daoClass>
+                                                            <transform>PASCAL</transform>
+                                                            <expression>$0_default_dao</expression>
+                                                        </daoClass>
+                                                    </table>
+                                                </tables>
+                                            </matchers>
+                                        </strategy>
+                                        <generate>
+                                            <pojosEqualsAndHashCode>true</pojosEqualsAndHashCode>
+                                            <pojos>true</pojos>
+                                            <daos>true</daos>
+                                            <springAnnotations>true</springAnnotations>
+                                        </generate>
+                                        <target>
+                                            <packageName>com.eletronics.elephantdb.database
+                                            </packageName>
+                                            <directory>target/generated-sources/jooq</directory>
+                                        </target>
+                                    </generator>
+                                </configuration>
                             </execution>
                         </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>mysql</groupId>
-                                <artifactId>mysql-connector-java</artifactId>
-                                <version>${mysql.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <configuration>
-                            <jdbc>
-                                <driver>com.mysql.jdbc.Driver</driver>
-                                <url>jdbc:mysql://localhost:3306/elephants</url>
-                                <user>elephant</user>
-                                <password>elephant</password>
-                            </jdbc>
-                            <generator>
-                                <name>org.jooq.util.DefaultGenerator</name>
-                                <database>
-                                    <name>org.jooq.util.mysql.MySQLDatabase</name>
-                                    <includes>.*</includes>
-                                    <excludes />
-                                    <inputSchema>elephants</inputSchema>
-                                </database>
-                                <target>
-                                    <packageName>com.eleTronics.jooq.domain</packageName>
-                                    <directory>gensrc/main/java</directory>
-                                </target>
-                            </generator>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
 
-    <repositories>
-        <repository>
-            <id>spring-releases</id>
-            <url>https://repo.spring.io/libs-release</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-releases</id>
-            <url>https://repo.spring.io/libs-release</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <!--<repositories>-->
+    <!--<repository>-->
+    <!--<id>spring-releases</id>-->
+    <!--<url>https://repo.spring.io/libs-release</url>-->
+    <!--</repository>-->
+    <!--</repositories>-->
+    <!--<pluginRepositories>-->
+    <!--<pluginRepository>-->
+    <!--<id>spring-releases</id>-->
+    <!--<url>https://repo.spring.io/libs-release</url>-->
+    <!--</pluginRepository>-->
+    <!--</pluginRepositories>-->
 </project>
